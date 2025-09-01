@@ -14,7 +14,7 @@ import tttc.session.SessionPlayer;
 @Service
 @RequiredArgsConstructor
 public class GameService {
-    private final SessionPlayer sessionPlayer;
+    private final SessionPlayer sessionPlayer; // why is this here? well, it is necessary to get the current player which is handled by the session
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository; // <-- inject repository
     private final PlayerToPlayerResourceConverter playerToPlayerResourceConverter;

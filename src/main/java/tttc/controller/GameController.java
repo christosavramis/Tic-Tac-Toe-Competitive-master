@@ -18,7 +18,6 @@ public class GameController {
 
     // ---------------- GET PLAYER INFO ----------------
     @PostMapping("/start")
-    @ResponseBody
     public Map<String, Object> startGame() {
         gameService.initializePlayers();
         Player p1 = gameService.getPlayer1();
@@ -49,10 +48,11 @@ public class GameController {
         return ResponseEntity.ok(Map.of("message", "Game created successfully", "playerName", playerName));
     }
 
-
+//  expecting to be called with something like domain.com/api/v1/game/testgameid/join
+// why i return ResponseEntity<?> well i haven't created the proper resource class yet :)
     @PostMapping("/game/{gameId}/join")
-    public ResponseEntity<?> joinGame(@PathVariable Long gameId, @RequestBody CreateOrJoinGameResource resource) {
-        return ResponseEntity.ok(APIWrapperResponse.of(gameService.joinGame(gameId, resource.getPlayerName())));
+    public ResponseEntity<?> joinGame(@PathVariable Long gameId) {
+        return ResponseEntity.ok(APIWrapperResponse.of(gameService.joinGame(gameId)));
     }
 
     @GetMapping("/game")
