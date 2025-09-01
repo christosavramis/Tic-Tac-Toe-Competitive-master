@@ -1,0 +1,11 @@
+{
+  "data": {
+    "playerName": "Player 2",
+    "playerRank": "0",
+    "playerGames": "0",
+    "playerWins": "0",
+    "playerTies": "0",
+    "playerLoses": "Player 2"
+  },
+  "errors": null
+}

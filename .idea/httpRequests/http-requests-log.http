@@ -1,0 +1,54 @@
+GET http://localhost:8080/api/v1/game/profile/2
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T165506.200.json
+
+###
+
+GET http://localhost:8080/api/v1/game/profile/2
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T165303.200.json
+
+###
+
+GET http://localhost:8080/api/v1/game/profile/2
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T163250.200.json
+
+###
+
+GET http://localhost:8080/api/v1/game/profile/2
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T163225.404.json
+
+###
+
+GET http://localhost:8080/api/v1/game/profile/2
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T163214.404.json
+
+###
+
+GET http://localhost:8080/api/v1/game/profile
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.1.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-08-29T161859.200.json
+
+###
+

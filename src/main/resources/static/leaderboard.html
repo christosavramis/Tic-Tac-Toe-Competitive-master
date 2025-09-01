@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Leaderboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            flex-direction: column;
+        }
+
+
+        .table-wrapper {
+            height: 80%;
+            width: 80%;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 12px;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 12px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        tbody td {
+            padding: 14px 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body>
+<h1 style="text-align: center; margin-top: 20px;">Leaderboard</h1>
+<p>
+    Top 20 mpampades ranked by elo.
+</p>
+<div>
+    <form id="search-form">
+        <fieldset>
+            <legend>find how long until you become mpampas</legend>
+            <label>
+                <input name="playerId" type="number" min="1" max="5" required>
+            </label>
+            <input type="submit" value="Find">
+        </fieldset>
+    </form>
+</div>
+<br>
+<div class="table-wrapper">
+    <table>
+        <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Games</th>
+            <th>Wins</th>
+            <th>Loses</th>
+            <th>Ties</th>
+        </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const API_BASE_URL = '/api/v1/leaderboard';
+
+    async function getPlayersForLeaderboard() {
+        const response = await fetch(`${API_BASE_URL}/profiles?limit=20`);
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        const body = await response.json();
+        return body.data;
+    }
+
+    async function getPlayer(id) {
+        const response = await fetch(`${API_BASE_URL}/profile/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        const body = await response.json();
+        console.log(body);
+        return body.data;
+    }
+
+    function createLeaderboardBody(profiles) {
+        let tableBody = '';
+        profiles.forEach((profile, index) => {
+            tableBody += `
+                <tr>
+                    <td>${profile.elo}</td>
+                    <td>${profile.name}</td>
+                    <td>${profile.games}</td>
+                    <td>${profile.wins}</td>
+                    <td>${profile.loses}</td>
+                    <td>${profile.ties}</td>
+                </tr>
+            `;
+        });
+        return tableBody;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBodyElement = document.getElementById('leaderboard-body');
+        getPlayersForLeaderboard().then(players => {
+            tableBodyElement.innerHTML = createLeaderboardBody(players);
+        })
+
+        const searchForm = document.getElementById('search-form');
+        searchForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const formData = new FormData(searchForm);
+            getPlayer(formData.get('playerId'))
+                .then(player => {
+                    alert('' + player.name + ' is ranked #' + player.rank + ' with ' + player.wins + ' wins and needs ' + (21 - player.wins) + ' more wins to become mpampas!');
+            });
+        })
+    })
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Game</title>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        :root {
+            --grid-size: 350px;
+            --grid-gap: 10px;
+            --cell-size: calc((var(--grid-size) - 20px) / 3);
+            --checkmark-o-color: green;
+            --checkmark-x-color: red;
+        }
+
+        .center-items {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            width: var(--grid-size);
+            height: var(--grid-size);
+            gap: var(--grid-gap);
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            background: whitesmoke;
+            cursor: pointer;
+        }
+
+        .cell input {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            opacity: 0;
+        }
+
+        .cell input:checked ~ .checkmark.o {
+            border: 2px solid var(--checkmark-o-color);
+            box-shadow: 0 0 20px var(--checkmark-o-color);
+        }
+
+        .cell input:checked ~ .checkmark.x {
+            border: 2px solid var(--checkmark-x-color);
+            box-shadow: 0 0 20px var(--checkmark-x-color);
+        }
+
+        .highlight.x {
+            border: 2px solid var(--checkmark-x-color);
+            box-shadow: 0 0 20px var(--checkmark-x-color);
+        }
+
+        .highlight.o {
+            border: 2px solid var(--checkmark-o-color);
+            box-shadow: 0 0 20px var(--checkmark-o-color);
+        }
+
+        .checkmark {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            position: relative;
+            top:  calc(-100% - 7px);
+            border: 2px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .checkmark.x {
+            color: var(--checkmark-x-color);
+        }
+
+        .checkmark.o {
+            color: var(--checkmark-o-color);
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .disabled {
+            pointer-events: none;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    <div class="center-items mb-20">
+        <h1>
+            Tic Tac Toe
+        </h1>
+        <p>
+            Play against another player or an AI.
+        </p>
+    </div>
+    <form id="tictactoeform" class="center-items">
+        <div class="grid">
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 0, "y": 0}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 1, "y": 0}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 2, "y": 0}' required>
+                <span class="checkmark"></span>
+            </label>
+
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 0, "y": 1}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 1, "y": 1}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 2, "y": 1}' required>
+                <span class="checkmark"></span>
+            </label>
+
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 0, "y": 2}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 1, "y": 2}' required>
+                <span class="checkmark"></span>
+            </label>
+            <label class="cell">
+                <input  type="radio" name="placement" value='{"x": 2, "y": 2}' required>
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <input class="button" type="submit" value="Make Move">
+        <p id="status-message">
+            Make your move.
+        </p>
+    </form>
+</div>
+<script src="game-api.js" type="module"></script>
+<script type="module">
+    import {GAME_API} from './game-api.js';
+    const CELLS = {};
+    const CURRENT_PLAYER = 'O';
+
+    function initCells(ticTacToeForm) {
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                CELLS[`${x}-${y}`] = ticTacToeForm.querySelector(`input[value='{"x": ${x}, "y": ${y}}']`);
+            }
+        }
+    }
+
+    function updateBoard(cells, result) {
+        const newBoard = result.board;
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                const value = newBoard[y][x];
+                const cellInput = cells[`${x}-${y}`];
+                const checkmark = cellInput.nextElementSibling;
+
+                if (value) {
+                    checkmark.textContent = value;
+                    checkmark.classList.add(value.toLowerCase());
+                    if (value === result.winner) {
+                        checkmark.classList.add('highlight');
+                    }
+                }
+
+                if (value || result.winner) {
+                    cellInput.disabled = true;
+                    checkmark.classList.add('disabled');
+                }
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        const ticTacToeForm = document.getElementById('tictactoeform');
+        const statusMessage = document.getElementById('status-message');
+        initCells(ticTacToeForm);
+        let previousTarget = null;
+        function cleanPreviousTarget() {
+            previousTarget.checked = false;
+            previousTarget = null;
+        }
+        ticTacToeForm.querySelectorAll('input[type=radio]').forEach((element) => {
+            element.addEventListener('change', (event) => {
+                if (previousTarget) {
+                    const checkmark = previousTarget.nextElementSibling;
+                    checkmark.textContent = '';
+                    checkmark.classList.remove('x', 'o');
+                }
+                const current = event.target;
+                previousTarget = current;
+                const checkmark = current.nextElementSibling;
+                checkmark.classList.add(CURRENT_PLAYER.toLowerCase());
+                checkmark.textContent = CURRENT_PLAYER;
+            });
+        })
+        ticTacToeForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const data = new FormData(ticTacToeForm).get('placement') + '';
+            ticTacToeForm.classList.add('disabled');
+            statusMessage.textContent = 'Waiting for AI move...';
+            const result = await GAME_API.playMove(JSON.parse(data));
+            cleanPreviousTarget();
+            updateBoard(CELLS, result);
+            if (result.winner) {
+                statusMessage.textContent = result.winner === CURRENT_PLAYER ? 'You win!' : 'AI wins!';
+            } if (result.draw) {
+                statusMessage.textContent = 'DRAW!';
+            } else {
+                ticTacToeForm.classList.remove('disabled');
+                statusMessage.textContent = 'Make your move.';
+            }
+        });
+    })
+</script>
+</body>
+</html>
