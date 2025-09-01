@@ -51,7 +51,7 @@ GameController: Handles creating games, making moves, and checking status.
 If controllers are the fun, social butterflies, services are the introverts who actually get work done.
 They contain the business logic — all the rules that make the game function.
 
-GameService: Creates games, makes moves, checks winners, keeps everything from catching fire.
+GameService: Creates games, makes moves, checks winners, keeps everything from catching fire. Service is on fire!
 
 ### Repository
 
